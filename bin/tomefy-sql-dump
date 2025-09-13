@@ -11,4 +11,3 @@ read SQL_FILE
 set -e
 
 podman exec -it "$CONTAINER_NAME" mysqldump -u root -p"$ROOT_PASSWORD" "$DBNAME" 2>&1 | grep -v "Warning" > "$SQL_FILE" 
-
