@@ -1,0 +1,26 @@
+#!/bin/bash
+source $HOME/.mysql/.env
+
+# tomefy-sql-copy [src] [user] [database] [target]
+
+echo "tomefy-sql-copy  [src] [user] [database] [target]"
+
+if [ -z "$4" ]; then
+    TO_PUT_PATH="/tmp/sql_test"
+else 
+    TO_PUT_PATH="$4"
+fi
+
+echo "to put path: $TO_PUT_PATH"
+
+
+podman cp "$1" "$CONTAINER_NAME:$TO_PUT_PATH" 
+
+if [ -z "$1" ]; then 
+    echo "Pas de fichier de commencement utilisée"
+else
+    nom_fichier=$(basename "$1")
+   echo "user : $2"
+   echo "database : $3"
+    podman exec -it -w "$TO_PUT_PATH" "$CONTAINER_NAME" mysql -u $2 -p $3 -e "source $TO_PUT_PATH/$nom_fichier"
+fi
